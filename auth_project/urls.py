@@ -20,5 +20,8 @@ from singIn import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.sign_in, name='home')
+    path('', views.sign_up, name='home'),
+    path('login/',views.user_login, name='login'),
+    path('profile/', views.profile, name = 'profile' ),
+    path('logout/', views.log_out, name = 'logout')
 ]
