@@ -33,7 +33,7 @@ def user_login(request):
             fm = AuthenticationForm()
         return render(request, 'singIn/userlogin.html',{'form':fm})
     else:
-        return HttpResponseRedirect('/profile/')
+        return HttpResponseRedirect('/profile/c')
 
 
 # profile
