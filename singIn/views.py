@@ -2,7 +2,7 @@ from django.shortcuts import render, HttpResponseRedirect
 from .forms import Singupforms
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm,PasswordChangeForm
-from django.contrib.auth import authenticate,login,logout
+from django.contrib.auth import authenticate,login,logout,update_session_auth_hash
 
 
 # sign_up
@@ -49,11 +49,17 @@ def log_out(request):
 
 # changepass
 def userchange_pass(request):
-    if request.method == 'POST':
-        fm = PasswordChangeForm(user=request.user, data =request.POST)
-        if fm.is_valid():
-            fm.save()
-            return HttpResponseRedirect('/profile/')
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            fm = PasswordChangeForm(user=request.user, data =request.POST)
+            if fm.is_valid():
+                fm.save()
+                update_session_auth_hash(request, fm.user)
+                return HttpResponseRedirect('/profile/')
+        else:
+            fm = PasswordChangeForm(user=request.user)
+        return render(request, 'singIn/changepass.html',{'form':fm})
     else:
-        fm = PasswordChangeForm(user=request.user)
-    return render(request, 'singIn/changepass.html',{'form':fm})
+        return HttpResponseRedirect('/login/')
+    
+    
