@@ -1,5 +1,5 @@
 from django.shortcuts import render, HttpResponseRedirect
-from .forms import Singupforms
+from .forms import Singupforms,EdituserProfile
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm,PasswordChangeForm
 from django.contrib.auth import authenticate,login,logout,update_session_auth_hash
@@ -39,7 +39,14 @@ def user_login(request):
 # profile
 def profile(request):
     if request.user.is_authenticated:
-        return render(request, 'singIn/profile.html', {'name':request.user})
+        if request.method == "POST":
+            fm = EdituserProfile(request.POST, instance = request.user)
+            if fm.is_valid:
+                messages.success(request, 'Profile Updates')
+                fm.save()
+        else:
+            fm = EdituserProfile(instance = request.user)
+        return render(request, 'singIn/profile.html', {'name':request.user, 'form':fm})
     else:
         return HttpResponseRedirect('/login/')
 # logout
