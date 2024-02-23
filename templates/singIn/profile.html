@@ -2,6 +2,12 @@
 {% block content %}
 <h1>Welcome {{name}} </h1>
 <h1>My profile</h1>
+{% if users != None %}
+    <h3>List of user</h3>
+    {% for user in users %}
+    <a href="{% url 'userdetail' user.id%}">{{user.username}} <br> <br></a>
+    {% endfor %}
+{% endif %}
 <form action="" method="post" novalidate>
     {% csrf_token %}
     {% if form.non_field.errors %}
